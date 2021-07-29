@@ -15,4 +15,14 @@ export const colors = {
     dark: '#519839',
     light: '#4bbf6b',
   },
+  black: {
+    default: '#000000',
+  },
+  red: {
+    default: '#b04632',
+  },
+  blue: {
+    light: '#6ec4f5',
+    default: '#0079bf',
+  },
 };

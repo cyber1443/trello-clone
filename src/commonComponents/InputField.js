@@ -11,7 +11,7 @@ export default ({value, onChange, placeholder}) => {
       borderRadius: 10,
       paddingHorizontal: 20,
       ...typography.heading4,
-      color: colors.black.default,
+      color: colors.white.default,
     },
   });
 

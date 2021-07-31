@@ -1,8 +1,19 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
-import {typography} from '../../../Theme';
+import {colors, typography} from '../../../Theme';
+import {useNavigation} from '@react-navigation/native';
 
 export default ({item}) => {
+  const navigation = useNavigation();
+
+  const openBoard = () => {
+    navigation.navigate('Lists', {
+      id: item.id,
+      name: item.name,
+      background: item.prefs.backgroundColor,
+    });
+  };
+
   const styles = StyleSheet.create({
     container: {
       height: 50,
@@ -21,11 +32,15 @@ export default ({item}) => {
     text: {
       ...typography.heading5,
       marginLeft: 20,
+      color: colors.gray.default,
     },
   });
 
   return (
-    <TouchableOpacity key={item.id} style={styles.container}>
+    <TouchableOpacity
+      onPress={openBoard}
+      key={item.id}
+      style={styles.container}>
       <Image style={styles.image} source={{uri: item.prefs.backgroundImage}} />
       <Text numberOfLines={1} style={styles.text}>
         {item.name}

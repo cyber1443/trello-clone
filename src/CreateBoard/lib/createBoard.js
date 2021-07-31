@@ -7,7 +7,7 @@ export const create = async ({name, backgroundColor}) => {
     data: {
       name,
       prefs_background: backgroundColor,
-      idBoardSource: false,
+      defaultLists: false,
     },
   };
   const response = await run(request);

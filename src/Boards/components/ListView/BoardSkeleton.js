@@ -4,8 +4,6 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {colors} from '../../../Theme';
 
 export default ({index}) => {
-  const skeletonSpeed = 800;
-
   const styles = StyleSheet.create({
     container: {
       height: 50,
@@ -32,9 +30,9 @@ export default ({index}) => {
   return (
     <View key={index.toString()} style={styles.container}>
       <SkeletonPlaceholder
-        speed={skeletonSpeed}
-        highlightColor={colors.white.default}
-        backgroundColor={colors.blue.light}>
+        speed={800}
+        highlightColor={colors.background.default}
+        backgroundColor={colors.background.light}>
         <View style={styles.row}>
           <View style={styles.image} />
           <View style={styles.text} />

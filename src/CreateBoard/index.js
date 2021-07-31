@@ -44,16 +44,17 @@ const CreateBoard = ({navigation}) => {
     container: {
       flex: 1,
       padding: 20,
-      backgroundColor: colors.gray.light,
+      backgroundColor: colors.background.default,
     },
     header: {
-      borderBottomWidth: 1,
+      backgroundColor: colors.background.light,
     },
   });
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: strings.create_board,
+      headerTintColor: colors.white.default,
       headerStyle: styles.header,
       headerRight: () => <CheckButton onPress={createNewBoard} />,
     });

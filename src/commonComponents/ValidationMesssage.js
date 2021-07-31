@@ -8,6 +8,7 @@ export default ({message}) => {
       ...typography.heading5,
       marginTop: 5,
       color: colors.red.default,
+      height: 20,
     },
   });
 

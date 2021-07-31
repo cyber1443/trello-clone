@@ -22,9 +22,9 @@ export default ({onPress, style}) => {
   return (
     <TouchableOpacity onPress={onButtonPress} style={styles.container}>
       {!isLoading ? (
-        <MaterialIcons name="check" color={colors.black.default} size={25} />
+        <MaterialIcons name="check" color={colors.white.default} size={25} />
       ) : (
-        <ActivityIndicator size="small" color={colors.black.default} />
+        <ActivityIndicator size="small" color={colors.white.default} />
       )}
     </TouchableOpacity>
   );

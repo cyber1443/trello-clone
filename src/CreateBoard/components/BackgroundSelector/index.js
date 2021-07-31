@@ -14,7 +14,7 @@ export default ({backgroundsArray, setBackgroundsArray}) => {
 
   const renderBackground = () =>
     backgroundsArray.map(item => (
-      <View style={styles.buttonContainer}>
+      <View key={item.id} style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={() => setItemPressed(item)}
           style={{

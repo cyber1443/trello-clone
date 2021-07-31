@@ -19,7 +19,7 @@ export default ({onPress, style}) => {
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
-      <AntDesign name="plus" color={colors.white.default} size={25} />
+      <AntDesign name="plus" color={colors.background.light} size={25} />
     </TouchableOpacity>
   );
 };

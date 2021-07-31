@@ -9,5 +9,10 @@ export const strings = new LocalizedStrings({
     select_background: 'Select background',
     please_select_background: 'Please select background for the board',
     no_boards: 'No boards yet... maybe you should create one?',
+    add_card: '+ Add card',
+    card_name: 'Card name',
+    add_card_title: 'Add card',
+    add_list_title: 'Add list',
+    list_name: 'List name',
   },
 });

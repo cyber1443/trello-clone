@@ -6,8 +6,8 @@ import BoardSkeleton from './BoardSkeleton';
 import LottieView from 'lottie-react-native';
 import {strings} from '../../../localization';
 
+const skeletonData = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
 export default ({data, isLoading, handleOnRefresh, isRefreshing}) => {
-  const skeletonData = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
   const keyExtractor = useCallback(
     (item, index) => (isLoading ? index.toString() : item.id),
     [isLoading],

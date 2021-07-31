@@ -6,6 +6,7 @@ import ListView from './components/ListView';
 import FloatingButton from './components/FloatingButton';
 import {setBoards, startRefresh} from './state/reducer';
 import {colors} from '../Theme';
+import {resetState} from '../Lists/state/reducer';
 
 const Boards = ({navigation}) => {
   const dispatch = useDispatch();
@@ -30,12 +31,18 @@ const Boards = ({navigation}) => {
 
   useEffect(() => {
     getBoardsData();
-  }, [getBoardsData]);
+
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(resetState());
+    });
+
+    return unsubscribe;
+  }, [dispatch, getBoardsData, navigation]);
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.gray.light,
+      backgroundColor: colors.background.default,
     },
     button: {
       position: 'absolute',
@@ -43,21 +50,23 @@ const Boards = ({navigation}) => {
       right: 20,
     },
     header: {
-      borderBottomWidth: 1,
+      backgroundColor: colors.background.light,
     },
   });
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerStyle: styles.header,
+      headerTintColor: colors.white.default,
     });
   }, [navigation, styles.header]);
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
-        backgroundColor={colors.white.default}
-        barStyle={'dark-content'}
+        backgroundColor={colors.background.light}
+        barStyle={'light-content'}
+        translucent
       />
       <ListView
         data={boards}

@@ -1,5 +1,9 @@
 export const colors = {
   primary: '#0079bf',
+  background: {
+    light: '#272727',
+    default: '#141414',
+  },
   text: {
     default: '#172B4D',
     lightGray: '#42526E',
@@ -17,6 +21,7 @@ export const colors = {
   },
   black: {
     default: '#000000',
+    transparent30: 'rgba(0,0,0,0.3)',
   },
   red: {
     default: '#b04632',

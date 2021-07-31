@@ -3,7 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Boards from '../../Boards';
 import CreateBoard from '../../CreateBoard';
 import Lists from '../../Lists';
-import {animateNavigationOptions, commonNavigationOptions} from '../settings';
+import {animateNavigationOptions} from '../settings';
 
 const Stack = createStackNavigator();
 
@@ -14,11 +14,7 @@ const BoardStack = () => {
       screenOptions={animateNavigationOptions}>
       <Stack.Screen name="Boards" component={Boards} />
       <Stack.Screen name="CreateBoard" component={CreateBoard} />
-      <Stack.Screen
-        name="Lists"
-        component={Lists}
-        // options={commonNavigationOptions}
-      />
+      <Stack.Screen name="Lists" component={Lists} />
     </Stack.Navigator>
   );
 };

@@ -26,12 +26,25 @@ export const boardsSlice = createSlice({
       });
       state.boards = temp;
     },
+    deleteBoard: (state, action) => {
+      const temp = state.boards.filter(item =>
+        item.id === action.payload ? null : item,
+      );
+      state.boards = temp;
+    },
+    updateBoard: (state, action) => {
+      const temp = state.boards.map(item =>
+        item.id === action.payload.id ? action.payload : item,
+      );
+      state.boards = temp;
+    },
     startRefresh: state => {
       state.isRefreshing = true;
     },
   },
 });
 
-export const {setBoards, addBoard, startRefresh} = boardsSlice.actions;
+export const {setBoards, addBoard, startRefresh, deleteBoard, updateBoard} =
+  boardsSlice.actions;
 
 export default boardsSlice.reducer;

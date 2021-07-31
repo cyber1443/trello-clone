@@ -20,7 +20,10 @@ export default ({item, drag, isActive}) => {
   });
 
   return (
-    <TouchableOpacity key={item.id} style={styles.container} onLongPress={drag}>
+    <TouchableOpacity
+      key={item?.id}
+      style={styles.container}
+      onLongPress={drag}>
       <Text style={styles.title}>{item?.name}</Text>
     </TouchableOpacity>
   );

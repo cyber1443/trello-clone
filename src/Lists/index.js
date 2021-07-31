@@ -6,25 +6,39 @@ import {
   StatusBar,
   View,
   TouchableOpacity,
+  TextInput,
+  Text,
 } from 'react-native';
-import {colors} from '../Theme';
+import {colors, typography} from '../Theme';
 import {strings} from '../localization';
 import {useHeaderHeight} from '@react-navigation/stack';
-import {getBoardDetails, getLists, getCards} from './lib';
+import {
+  getBoardDetails,
+  getLists,
+  getCards,
+  createCard,
+  createList,
+} from './lib';
+import {deleteBoard as deleteBoardRequest} from '../Boards/lib/deleteBoard';
+import {updateBoard as updateBoardRequest} from '../Boards/lib/updateBoard';
+import {deleteBoard, updateBoard} from '../Boards/state/reducer';
 import DragableList from './components/DragableList';
 import {HeaderBackButton} from '@react-navigation/stack';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector, shallowEqual} from 'react-redux';
-import {setLists, setCards} from './state/reducer';
+import {setLists, setCards, addCard, addList} from './state/reducer';
 import CreateListItem from './components/CreateListItem';
 import DragableListSkeleton from './components/DragableListSkeleton';
+import CheckButton from '../commonComponents/CheckButton';
+import {validateName} from './validationHelpers';
+import Menu, {MenuItem} from '../commonComponents/PopupMenu';
 
 const skeletonData = [{}, {}];
 
 const Lists = ({navigation, route}) => {
   const headerHeight = useHeaderHeight();
   const dispatch = useDispatch();
-  const {isLoading, lists, isRefreshing, cards} = useSelector(
+  const {isLoading, lists, cards} = useSelector(
     state => state.lists,
     shallowEqual,
   );
@@ -32,6 +46,8 @@ const Lists = ({navigation, route}) => {
   const [boardName, setBoardName] = useState(null);
   const [cardCreationActiveId, setCardCreationActiveId] = useState(null);
   const [isListCreationActive, setIsListCreationActive] = useState(null);
+  const [newCardName, setNewCardName] = useState(null);
+  const [newListName, setNewListName] = useState(null);
 
   const styles = StyleSheet.create({
     container: {
@@ -43,11 +59,21 @@ const Lists = ({navigation, route}) => {
       backgroundColor: colors.black.transparent30,
       height: headerHeight,
     },
+    headerTitle: {
+      ...typography.heading4,
+      color: colors.white.default,
+      lineHeight: 30,
+      fontSize: 22,
+      fontWeight: 'bold',
+    },
     contentContainer: {
       paddingLeft: 20,
     },
     headerLeft: {
       marginLeft: 20,
+    },
+    menu: {
+      right: 20,
     },
   });
 
@@ -59,30 +85,87 @@ const Lists = ({navigation, route}) => {
         return item?.isCreate ? (
           <CreateListItem
             isListCreationActive={isListCreationActive}
-            setIsListCreationActive={setIsListCreationActive}
+            activateListCreation={activateListCreation}
+            listName={newListName}
+            setListName={setNewListName}
           />
         ) : (
           <DragableList
             listData={item}
-            cardsData={getCardsForList(item.id)}
+            cardsData={cards}
             isLoading={isLoading}
             cardCreationActiveId={cardCreationActiveId}
-            setCardCreationActiveId={setCardCreationActiveId}
+            activateCardCreation={activateCardCreation}
+            newCardName={newCardName}
+            setNewCardName={setNewCardName}
           />
         );
       }
     },
-    [cardCreationActiveId, getCardsForList, isListCreationActive, isLoading],
+    [
+      cardCreationActiveId,
+      cards,
+      isListCreationActive,
+      isLoading,
+      newCardName,
+      newListName,
+    ],
   );
 
   const keyExtractor = useCallback((item, index) => index.toString(), []);
 
-  const getCardsForList = useCallback(
-    listId => {
-      return cards.filter(item => item.idList === listId);
-    },
-    [cards],
-  );
+  const createNewCard = useCallback(async () => {
+    if (!validateName(newCardName)) {
+      setCardCreationActiveId(null);
+      return;
+    }
+    const {data} = await createCard({
+      listId: cardCreationActiveId,
+      name: newCardName,
+    });
+    dispatch(addCard(data));
+    setCardCreationActiveId(null);
+    setNewCardName(null);
+  }, [cardCreationActiveId, dispatch, newCardName]);
+
+  const createNewList = useCallback(async () => {
+    if (!validateName(newListName)) {
+      setIsListCreationActive(false);
+      return;
+    }
+    const {id} = route.params;
+    const {data} = await createList({name: newListName, boardId: id});
+
+    dispatch(addList(data));
+    setIsListCreationActive(false);
+    setNewListName(null);
+  }, [dispatch, newListName, route.params]);
+
+  const activateCardCreation = listId => {
+    setIsListCreationActive(false);
+    setCardCreationActiveId(listId);
+  };
+
+  const activateListCreation = () => {
+    setCardCreationActiveId(null);
+    setIsListCreationActive(true);
+  };
+
+  const onDeletePress = useCallback(async () => {
+    const {id} = route.params;
+    deleteBoardRequest(id);
+    dispatch(deleteBoard(id));
+    navigation.goBack();
+  }, [dispatch, navigation, route.params]);
+
+  const updateBoardName = useCallback(async () => {
+    if (!validateName(boardName)) {
+      return;
+    }
+    const {id} = route.params;
+    const {data} = await updateBoardRequest({id, name: boardName});
+    dispatch(updateBoard(data));
+  }, [boardName, dispatch, route.params]);
 
   const getDefaultBoardSettings = useCallback(async () => {
     const {id, name, background} = route.params ?? {};
@@ -130,27 +213,68 @@ const Lists = ({navigation, route}) => {
     [cardCreationActiveId, isListCreationActive, styles.headerLeft],
   );
 
+  const getHeaderRight = useCallback(() => {
+    return cardCreationActiveId || isListCreationActive ? (
+      <CheckButton
+        onPress={cardCreationActiveId ? createNewCard : createNewList}
+      />
+    ) : (
+      <Menu style={styles.menu}>
+        <MenuItem
+          title={strings.delete_board}
+          titleColor={colors.red.default}
+          onPress={onDeletePress}
+        />
+      </Menu>
+    );
+  }, [
+    cardCreationActiveId,
+    createNewCard,
+    createNewList,
+    isListCreationActive,
+    onDeletePress,
+    styles.menu,
+  ]);
+
   const getHeaderTitle = useCallback(() => {
     if (cardCreationActiveId) {
-      return strings.add_card_title;
+      return <Text style={styles.headerTitle}>{strings.add_card_title} </Text>;
     }
     if (isListCreationActive) {
-      return strings.add_list_title;
+      return <Text style={styles.headerTitle}>{strings.add_list_title} </Text>;
     }
-    return boardName ? boardName : '';
-  }, [boardName, cardCreationActiveId, isListCreationActive]);
+    return (
+      <TextInput
+        value={boardName}
+        onChangeText={setBoardName}
+        style={styles.headerTitle}
+        autoCorrect={false}
+        placeholder={strings.board_name}
+        placeholderTextColor={colors.gray.default}
+        onBlur={updateBoardName}
+      />
+    );
+  }, [
+    boardName,
+    cardCreationActiveId,
+    isListCreationActive,
+    styles.headerTitle,
+    updateBoardName,
+  ]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTintColor: colors.white.default,
       headerTransparent: true,
-      headerTitle: getHeaderTitle(),
+      headerTitle: () => getHeaderTitle(),
       headerBackground: () => <View style={styles.header} />,
       headerLeft: props => getHeaderLeft(props),
+      headerRight: () => getHeaderRight(),
     });
   }, [
     boardName,
     getHeaderLeft,
+    getHeaderRight,
     getHeaderTitle,
     headerHeight,
     navigation,
@@ -171,8 +295,8 @@ const Lists = ({navigation, route}) => {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         contentContainerStyle={styles.contentContainer}
-        snapToAlignment="start"
-        snapToInterval={320}
+        snapToAlignment="center"
+        snapToInterval={335}
         showsHorizontalScrollIndicator={false}
         style={styles.horizontalList}
       />

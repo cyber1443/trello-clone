@@ -10,7 +10,6 @@ export default ({route, navigation}) => {
 
   useEffect(() => {
     const {token} = route.params ?? {};
-    console.log('TOKEN', token);
     if (token) {
       setCredentials({token});
       dispatch(updateAuth('Completed'));

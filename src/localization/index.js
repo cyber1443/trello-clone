@@ -14,5 +14,7 @@ export const strings = new LocalizedStrings({
     add_card_title: 'Add card',
     add_list_title: 'Add list',
     list_name: 'List name',
+    delete_list: 'Delete list',
+    delete_board: 'Delete board',
   },
 });

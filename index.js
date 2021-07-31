@@ -5,12 +5,15 @@ import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 import {store, peristor} from './src/state/store';
+import {MenuProvider} from 'react-native-popup-menu';
 
 const renderApp = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={peristor}>
-        <App />
+        <MenuProvider>
+          <App />
+        </MenuProvider>
       </PersistGate>
     </Provider>
   );

@@ -9,14 +9,15 @@ import {
 import {colors, typography} from '../../Theme';
 import {strings} from '../../localization';
 
-export default ({isListCreationActive, setIsListCreationActive}) => {
-  const activateListCreationMode = () => {
-    setIsListCreationActive(true);
-  };
-
+export default ({
+  isListCreationActive,
+  activateListCreation,
+  listName,
+  setListName,
+}) => {
   const styles = StyleSheet.create({
     buttonContainer: {
-      width: 300,
+      width: 320,
       height: 50,
       backgroundColor: colors.black.transparent30,
       alignItems: 'center',
@@ -31,7 +32,7 @@ export default ({isListCreationActive, setIsListCreationActive}) => {
       fontWeight: 'bold',
     },
     cardContainer: {
-      width: 300,
+      width: 320,
       height: 50,
       padding: 10,
       backgroundColor: colors.black.transparent30,
@@ -52,16 +53,19 @@ export default ({isListCreationActive, setIsListCreationActive}) => {
     <>
       {!isListCreationActive ? (
         <TouchableOpacity
-          onPress={activateListCreationMode}
+          onPress={activateListCreation}
           style={styles.buttonContainer}>
           <Text style={styles.buttonText}>{strings.add_list_title} </Text>
         </TouchableOpacity>
       ) : (
         <View style={styles.cardContainer}>
           <TextInput
+            value={listName}
+            onChangeText={setListName}
             autoFocus
             style={styles.input}
             placeholder={strings.list_name}
+            autoCorrect={false}
             placeholderTextColor={colors.white.default}
           />
         </View>

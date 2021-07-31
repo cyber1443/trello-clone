@@ -7,6 +7,7 @@ export default ({index}) => {
   const styles = StyleSheet.create({
     container: {
       width: 320,
+      height: 350,
       padding: 10,
       backgroundColor: colors.black.transparent30,
       marginRight: 20,
@@ -37,12 +38,9 @@ export default ({index}) => {
         highlightColor={colors.background.default}
         backgroundColor={colors.background.light}>
         <View style={styles.title} />
-        <View style={styles.card1} />
-        <View style={styles.card2} />
         <View style={styles.card2} />
         <View style={styles.card1} />
-        <View style={styles.card1} />
-        <View style={styles.card1} />
+        <View style={styles.card2} />
       </SkeletonPlaceholder>
     </View>
   );

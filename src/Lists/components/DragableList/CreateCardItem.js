@@ -9,11 +9,13 @@ import {
 import {strings} from '../../../localization';
 import {colors, typography} from '../../../Theme';
 
-export default ({cardCreationActiveId, setCardCreationActiveId, listId}) => {
-  const activateCardCreation = () => {
-    setCardCreationActiveId(listId);
-  };
-
+export default ({
+  cardCreationActiveId,
+  activateCardCreation,
+  listId,
+  newCardName,
+  setNewCardName,
+}) => {
   const styles = StyleSheet.create({
     buttonContainer: {
       alignItems: 'center',
@@ -44,17 +46,20 @@ export default ({cardCreationActiveId, setCardCreationActiveId, listId}) => {
     <>
       {cardCreationActiveId !== listId ? (
         <TouchableOpacity
-          onPress={activateCardCreation}
+          onPress={() => activateCardCreation(listId)}
           style={styles.buttonContainer}>
           <Text style={styles.buttonText}>{strings.add_card} </Text>
         </TouchableOpacity>
       ) : (
         <View style={styles.cardContainer}>
           <TextInput
+            value={newCardName}
+            onChangeText={setNewCardName}
             multiline
             autoFocus
             style={styles.input}
             placeholder={strings.card_name}
+            autoCorrect={false}
             placeholderTextColor={colors.gray.default}
           />
         </View>

@@ -19,8 +19,10 @@ import {
   createCard,
   createList,
 } from './lib';
-import {deleteBoard as deleteBoardRequest} from '../Boards/lib/deleteBoard';
-import {updateBoard as updateBoardRequest} from '../Boards/lib/updateBoard';
+import {
+  deleteBoard as deleteBoardRequest,
+  updateBoard as updateBoardRequest,
+} from '../Boards/lib';
 import {deleteBoard, updateBoard} from '../Boards/state/reducer';
 import DragableList from './components/DragableList';
 import {HeaderBackButton} from '@react-navigation/stack';
@@ -32,6 +34,7 @@ import DragableListSkeleton from './components/DragableListSkeleton';
 import CheckButton from '../commonComponents/CheckButton';
 import {validateName} from './validationHelpers';
 import Menu, {MenuItem} from '../commonComponents/PopupMenu';
+import {resetState} from '../Card/state/reducer';
 
 const skeletonData = [{}, {}];
 
@@ -196,7 +199,19 @@ const Lists = ({navigation, route}) => {
   useEffect(() => {
     getDefaultBoardSettings();
     getBoardData();
-  }, [getBoardData, getDefaultBoardSettings, route.params]);
+
+    const unsubscribe = navigation.addListener('focus', () => {
+      dispatch(resetState());
+    });
+
+    return unsubscribe;
+  }, [
+    dispatch,
+    getBoardData,
+    getDefaultBoardSettings,
+    navigation,
+    route.params,
+  ]);
 
   const getHeaderLeft = useCallback(
     props => {

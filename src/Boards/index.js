@@ -7,6 +7,7 @@ import FloatingButton from './components/FloatingButton';
 import {setBoards, startRefresh} from './state/reducer';
 import {colors} from '../Theme';
 import {resetState} from '../Lists/state/reducer';
+import {getProfile} from '../AuthFlow/lib/getProfile';
 
 const Boards = ({navigation}) => {
   const dispatch = useDispatch();

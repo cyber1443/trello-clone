@@ -16,5 +16,12 @@ export const strings = new LocalizedStrings({
     list_name: 'List name',
     delete_list: 'Delete list',
     delete_board: 'Delete board',
+    delete_card: 'Delete card',
+    card_description: 'Card description',
+    change_card_list: 'Change card list',
+    edit_comment: 'Edit comment',
+    delete_comment: 'Delete comment',
+    comment: 'Write comment...',
+    comments: 'Comments',
   },
 });

@@ -39,6 +39,12 @@ export const listsSlice = createSlice({
       );
       state.lists = temp;
     },
+    deleteCard: (state, action) => {
+      const temp = state.cards.filter(item =>
+        item.id === action.payload ? null : item,
+      );
+      state.cards = temp;
+    },
     resetState: state => {
       state.isLoading = true;
       state.lists = [];
@@ -57,6 +63,7 @@ export const {
   updateCard,
   updateList,
   deleteList,
+  deleteCard,
 } = listsSlice.actions;
 
 export default listsSlice.reducer;

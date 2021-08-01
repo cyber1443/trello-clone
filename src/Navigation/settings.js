@@ -20,6 +20,16 @@ export const linking = {
           },
         },
       },
+      BoardsStack: {
+        screens: {
+          Card: {
+            path: 'card/:id',
+            parse: {
+              id: id => id.split('=')[1],
+            },
+          },
+        },
+      },
     },
   },
 };

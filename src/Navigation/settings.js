@@ -22,10 +22,24 @@ export const linking = {
       },
       BoardsStack: {
         screens: {
-          Card: {
-            path: 'card/:id',
+          Boards: {
+            path: '/:id',
             parse: {
-              id: id => id.split('=')[1],
+              id: id => id,
+            },
+          },
+          Lists: {
+            path: '/:id/:listId',
+            parse: {
+              id: id => id,
+              listId: listId => listId,
+            },
+          },
+          Card: {
+            path: '/:boardId/card/:id',
+            parse: {
+              boardId: boardId => boardId,
+              id: id => id,
             },
           },
         },

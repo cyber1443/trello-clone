@@ -46,7 +46,7 @@ export default ({
         autoPlay
         loop
       />
-      <Text style={styles.animationText}>{strings.no_boards}</Text>
+      <Text style={styles.animationText}>{strings.no_comments}</Text>
     </View>
   );
 

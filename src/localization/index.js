@@ -23,5 +23,6 @@ export const strings = new LocalizedStrings({
     delete_comment: 'Delete comment',
     comment: 'Write comment...',
     comments: 'Comments',
+    no_comments: 'No comments',
   },
 });

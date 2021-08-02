@@ -7,9 +7,8 @@ import FloatingButton from './components/FloatingButton';
 import {setBoards, startRefresh} from './state/reducer';
 import {colors} from '../Theme';
 import {resetState} from '../Lists/state/reducer';
-import {getProfile} from '../AuthFlow/lib/getProfile';
 
-const Boards = ({navigation}) => {
+const Boards = ({navigation, route}) => {
   const dispatch = useDispatch();
   const {boards, isLoading, isRefreshing} = useSelector(
     state => state.boards,
@@ -30,7 +29,18 @@ const Boards = ({navigation}) => {
     getBoardsData();
   }, [dispatch, getBoardsData]);
 
+  const handleDeepLink = useCallback(
+    boardId => {
+      navigation.navigate('Lists', {id: boardId});
+    },
+    [navigation],
+  );
+
   useEffect(() => {
+    const {id} = route.params ?? {};
+    if (id) {
+      handleDeepLink(id);
+    }
     getBoardsData();
 
     const unsubscribe = navigation.addListener('focus', () => {
@@ -38,7 +48,7 @@ const Boards = ({navigation}) => {
     });
 
     return unsubscribe;
-  }, [dispatch, getBoardsData, navigation]);
+  }, [dispatch, getBoardsData, handleDeepLink, navigation, route.params]);
 
   const styles = StyleSheet.create({
     container: {

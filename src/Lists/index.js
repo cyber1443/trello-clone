@@ -1,4 +1,10 @@
-import React, {useLayoutEffect, useEffect, useState, useCallback} from 'react';
+import React, {
+  useLayoutEffect,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -51,6 +57,8 @@ const Lists = ({navigation, route}) => {
   const [isListCreationActive, setIsListCreationActive] = useState(null);
   const [newCardName, setNewCardName] = useState(null);
   const [newListName, setNewListName] = useState(null);
+
+  const listRef = useRef();
 
   const styles = StyleSheet.create({
     container: {
@@ -170,6 +178,28 @@ const Lists = ({navigation, route}) => {
     dispatch(updateBoard(data));
   }, [boardName, dispatch, route.params]);
 
+  const handleDeepLink = useCallback(
+    listArray => {
+      const {listId} = route.params ?? {};
+      if (!listId) {
+        return;
+      }
+
+      let positionIndex = 0;
+
+      for (let i = 0; i < listArray.length; i++) {
+        if (listArray[i].id === listId) {
+          positionIndex = i;
+        }
+      }
+      listRef.current.scrollToIndex({
+        animated: true,
+        index: positionIndex,
+      });
+    },
+    [route.params],
+  );
+
   const getDefaultBoardSettings = useCallback(async () => {
     const {id, name, background} = route.params ?? {};
     if (name && background) {
@@ -194,11 +224,15 @@ const Lists = ({navigation, route}) => {
 
     const {data: cardsData} = await getCards(id);
     dispatch(setCards(cardsData));
+    return data;
   }, [dispatch, route.params]);
 
   useEffect(() => {
-    getDefaultBoardSettings();
-    getBoardData();
+    (async () => {
+      await getDefaultBoardSettings();
+      const listArray = await getBoardData();
+      handleDeepLink(listArray);
+    })();
 
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(resetState());
@@ -209,6 +243,7 @@ const Lists = ({navigation, route}) => {
     dispatch,
     getBoardData,
     getDefaultBoardSettings,
+    handleDeepLink,
     navigation,
     route.params,
   ]);
@@ -304,6 +339,7 @@ const Lists = ({navigation, route}) => {
         barStyle="light-content"
       />
       <FlatList
+        ref={listRef}
         data={isLoading ? skeletonData : [...lists, {isCreate: true}]}
         horizontal
         pagingEnabled

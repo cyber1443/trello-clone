@@ -30,6 +30,8 @@ import {
   updateComment,
   deleteComment,
 } from './state/reducer';
+import {getLists as getListsRequest} from '../Lists/lib/getLists';
+import {setLists} from '../Lists/state/reducer';
 
 const Card = ({navigation, route}) => {
   const {comments, isLoading} = useSelector(
@@ -79,7 +81,10 @@ const Card = ({navigation, route}) => {
   });
 
   const getCardDetails = useCallback(async () => {
-    const {id, data: cardParamData} = route.params;
+    const {id, data: cardParamData, boardId} = route.params;
+    if (boardId) {
+      getListFromDeepLink(boardId);
+    }
     if (cardParamData) {
       setCardData(cardParamData);
       setCardName(cardParamData.name);
@@ -90,7 +95,15 @@ const Card = ({navigation, route}) => {
       setCardName(data.name);
       setCardDesc(data.desc);
     }
-  }, [route.params]);
+  }, [getListFromDeepLink, route.params]);
+
+  const getListFromDeepLink = useCallback(
+    async boardId => {
+      const {data} = await getListsRequest(boardId);
+      dispatch(setLists(data));
+    },
+    [dispatch],
+  );
 
   const getCommentsDetails = useCallback(async () => {
     const {id} = route.params;
